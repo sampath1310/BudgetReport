@@ -22,21 +22,21 @@ def getSheetService():
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('./app/token.pickle'):
-        with open('./app/token.pickle', 'rb') as token:
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            os.listdir(os.getcwd())
+
             flow = InstalledAppFlow.from_client_secrets_file(
                 './app/credentials.json', SCOPES)
             
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('../app/token.pickle', 'wb') as token:
+        with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
     service = build('sheets', 'v4', credentials=creds)
     return service
@@ -59,10 +59,11 @@ def getBudget(service,SAMPLE_RANGE_NAME='A15:H22'):
         print('values loaded')
     filter_rec = [i for i in records if len(i) > 1]
     fd = pd.DataFrame(filter_rec)
+    print(fd.loc[0].values  .tolist())
     fd.columns = fd.loc[0].values
     fd.drop(0,inplace=True)
-    fd['month'] = fd.year.apply(lambda x: x.split('-')[0])
-    fd['years'] = fd.year.apply(lambda x: x.split('-')[1])
+    fd['month'] = fd.timeline.apply(lambda x: x.split('-')[0])
+    fd['years'] = fd.timeline.apply(lambda x: x.split('-')[1])
     print('transforming')
     result_json = fd.values.tolist()
     return result_json
@@ -85,11 +86,12 @@ def getUtility(service,SAMPLE_RANGE_NAME='Utility!A14:H21'):
         print('loaded values')
     filter_rec = [i for i in records if len(i) > 1]
     fd = pd.DataFrame(filter_rec)
+    
     fd.columns = fd.loc[0].values
     fd.drop(0,inplace=True)
-    fd['month'] = fd.year.apply(lambda x: x.split('-')[0])
-    fd['years'] = fd.year.apply(lambda x: x.split('-')[1])
-    result_json = fd.to_json()
+    fd['month'] = fd.timeline.apply(lambda x: x.split('-')[0])
+    fd['years'] = fd.timeline.apply(lambda x: x.split('-')[1])
+    result_json = fd.values.tolist()
     print('transformation done')
     return result_json
     
@@ -140,6 +142,7 @@ def getDocuments(service,SAMPLE_RANGE_NAME='Documents!A2:C9'):
     filter_rec = [i for i in records if len(i) > 1]
     fd = pd.DataFrame(filter_rec)
     fd.columns = fd.loc[0].values
+    print(fd.columns.values.tolist())
     fd.drop(0,inplace=True)
     fd['month'] = fd.year.apply(lambda x: x.split('-')[0])
     fd['years'] = fd.year.apply(lambda x: x.split('-')[1])
