@@ -22,8 +22,8 @@ def getSheetService():
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
+    if os.path.exists('/home/kid/Desktop/BudgetReport/token.pickle'):
+        with open('/home/kid/Desktop/BudgetReport/token.pickle', 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -32,7 +32,7 @@ def getSheetService():
         else:
 
             flow = InstalledAppFlow.from_client_secrets_file(
-                './app/credentials.json', SCOPES)
+                '../app/credentials.json', SCOPES)
             
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
@@ -59,14 +59,14 @@ def getBudget(service,SAMPLE_RANGE_NAME='A15:H22'):
         print('values loaded')
     filter_rec = [i for i in records if len(i) > 1]
     fd = pd.DataFrame(filter_rec)
-    print(fd.loc[0].values  .tolist())
+    print(fd.loc[0].values.tolist())
     fd.columns = fd.loc[0].values
     fd.drop(0,inplace=True)
     fd['month'] = fd.timeline.apply(lambda x: x.split('-')[0])
     fd['years'] = fd.timeline.apply(lambda x: x.split('-')[1])
     print('transforming')
     result_json = fd.values.tolist()
-    return result_json
+    return  result_json 
 
 def getUtility(service,SAMPLE_RANGE_NAME='Utility!A14:H21'):
     sheet = service.spreadsheets()
