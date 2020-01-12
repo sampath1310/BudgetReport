@@ -12,7 +12,7 @@ import json
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1xkLohYmwZLjFySDVYMj4AGDsWvnRaMzmvFaUPqsStL8'
+SAMPLE_SPREADSHEET_ID = ''
 
 def getSheetService():
     """Shows basic usage of the Sheets API.
